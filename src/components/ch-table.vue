@@ -8,10 +8,14 @@
         <th>Date</th>
         <th>Visit Time</th>
         <th>Doctor</th>
-        <th>Coitions</th>
+        <th>Conditions</th>
         <th></th>
       </tr>
-      <tr class="td-row" v-for="(element, index) in this.tableInfo" :key="index">
+      <tr
+        class="td-row"
+        v-for="(element, index) in this.tableInfo"
+        :key="index"
+      >
         <td><img :src="element.img" alt="" />{{ element.name }}</td>
         <td>{{ element.email }}</td>
         <td>{{ element.date }}</td>
@@ -33,7 +37,7 @@
               />
             </svg>
           </button>
-          <button class="delete">
+          <button class="delete" @click="remove(element)">
             <svg
               width="12"
               height="14"
@@ -59,6 +63,7 @@ export default {
     return {
       tableInfo: [
         {
+          id: 0,
           img: require("../assets/images/01.png"),
           name: "Leslie Alexander",
           email: "lesie.alexander@example.com",
@@ -68,43 +73,54 @@ export default {
           conditions: "Mumps Stage II",
         },
         {
+          id: 1,
           img: require("../assets/images/02.png"),
-          name: "Leslie Alexander",
-          email: "lesie.alexander@example.com",
+          name: "Ronald Richards",
+          email: "ronald.richards@example.com",
           date: "10/10/2020",
-          visitTime: "09:15-09:45am",
-          doctor: "Dr. Jacob Jones",
-          conditions: "Mumps Stage II",
+          visitTime: "12:00-12:45pm",
+          doctor: "Dr. Theresa Webb",
+          conditions: "Depression",
         },
         {
+          id: 2,
           img: require("../assets/images/03.png"),
-          name: "Leslie Alexander",
-          email: "lesie.alexander@example.com",
-          date: "10/10/2020",
-          visitTime: "09:15-09:45am",
+          name: "Jane Cooper",
+          email: "jane.cooper@example.com",
+          date: "10/13/2020",
+          visitTime: "01:15-01:45pm",
           doctor: "Dr. Jacob Jones",
-          conditions: "Mumps Stage II",
+          conditions: "Arthritis",
         },
         {
+          id: 3,
           img: require("../assets/images/04.png"),
-          name: "Leslie Alexander",
-          email: "lesie.alexander@example.com",
-          date: "10/10/2020",
-          visitTime: "09:15-09:45am",
-          doctor: "Dr. Jacob Jones",
-          conditions: "Mumps Stage II",
+          name: "Robert Fox",
+          email: "robert.fox@gmail.com",
+          date: "10/14/2020",
+          visitTime: "02:00-02:45pm",
+          doctor: "Dr. Arlene McCoy",
+          conditions: "Fracture",
         },
         {
+          id: 4,
           img: require("../assets/images/02.png"),
-          name: "Leslie Alexander",
-          email: "lesie.alexander@example.com",
-          date: "10/10/2020",
-          visitTime: "09:15-09:45am",
-          doctor: "Dr. Jacob Jones",
-          conditions: "Mumps Stage II",
+          name: "Jenny Wilson",
+          email: "jenny.wilson@example.com",
+          date: "10/15/2020",
+          visitTime: "12:00-12:45pm",
+          doctor: "Dr. Esther Howard",
+          conditions: "Depression",
         },
       ],
     };
+  },
+  methods: {
+    remove(element) {
+      const id = element.id;
+      const index = this.tableInfo.findIndex(x => x.id === id);
+      this.tableInfo.splice(index, 1);
+    },
   },
 };
 </script>
@@ -145,35 +161,36 @@ th {
   }
   .table {
     .heading-row {
-      background: #e8e8e8;
-      opacity: 0.2;
+      background: #e8e8e869;
       padding: 19px 0;
       width: 100%;
-      .first-heading{
-          padding-left: 24px;
+      .first-heading {
+        padding-left: 24px;
       }
-      th{
-          padding: 18px 0;
+      th {
+        padding: 18px 0;
       }
     }
-    .td-row{
-        border: 1px solid #e8e8e8;
-        border-left: none;
-        border-right: none;
-        transition: all 0.2s;
-        td:first-child{
-            padding-left: 24px;
-        }
-        .edit, .delete{
-            border: none;
-            border-radius: 4px;
-        }
-        .edit:hover, .delete:hover{
-            background: #e0e0e05e;
-        }
+    .td-row {
+      border: 1px solid #e8e8e8;
+      border-left: none;
+      border-right: none;
+      transition: all 0.2s;
+      td:first-child {
+        padding-left: 24px;
+      }
+      .edit,
+      .delete {
+        border: none;
+        border-radius: 4px;
+      }
+      .edit:hover,
+      .delete:hover {
+        background: #e0e0e05e;
+      }
     }
-    .td-row:hover{
-        background: #e8e8e85b;
+    .td-row:hover {
+      background: #e8e8e85b;
     }
   }
 }
