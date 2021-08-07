@@ -9,7 +9,9 @@
         <th>Visit Time</th>
         <th>Doctor</th>
         <th>Conditions</th>
-        <th></th>
+        <th>
+            <button class="add">+</button>
+        </th>
       </tr>
       <tr
         class="td-row"
