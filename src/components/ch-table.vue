@@ -3,13 +3,13 @@
     <h4 class="table-title">Appointment Activity</h4>
     <table class="table">
       <tr class="heading-row">
-        <th>Name</th>
+        <th class="first-heading">Name</th>
         <th>Email</th>
         <th>Date</th>
         <th>Visit Time</th>
         <th>Doctor</th>
         <th>Coitions</th>
-        <th>gergerg</th>
+        <th></th>
       </tr>
       <tr class="td-row" v-for="(element, index) in this.tableInfo" :key="index">
         <td><img :src="element.img" alt="" />{{ element.name }}</td>
@@ -68,7 +68,7 @@ export default {
           conditions: "Mumps Stage II",
         },
         {
-          img: require("../assets/images/01.png"),
+          img: require("../assets/images/02.png"),
           name: "Leslie Alexander",
           email: "lesie.alexander@example.com",
           date: "10/10/2020",
@@ -77,7 +77,25 @@ export default {
           conditions: "Mumps Stage II",
         },
         {
-          img: require("../assets/images/01.png"),
+          img: require("../assets/images/03.png"),
+          name: "Leslie Alexander",
+          email: "lesie.alexander@example.com",
+          date: "10/10/2020",
+          visitTime: "09:15-09:45am",
+          doctor: "Dr. Jacob Jones",
+          conditions: "Mumps Stage II",
+        },
+        {
+          img: require("../assets/images/04.png"),
+          name: "Leslie Alexander",
+          email: "lesie.alexander@example.com",
+          date: "10/10/2020",
+          visitTime: "09:15-09:45am",
+          doctor: "Dr. Jacob Jones",
+          conditions: "Mumps Stage II",
+        },
+        {
+          img: require("../assets/images/02.png"),
           name: "Leslie Alexander",
           email: "lesie.alexander@example.com",
           date: "10/10/2020",
@@ -97,7 +115,7 @@ td {
   line-height: 20px;
   letter-spacing: 0.1px;
   color: #52575c;
-  padding: 4px 0;
+  padding: 12px 0;
   img {
     padding: 0;
     margin-right: 12px;
@@ -112,12 +130,11 @@ th {
   color: #25282b;
 }
 .ch-table {
-  padding: 24px;
   background: #ffffff;
   box-shadow: 0px 12px 26px rgba(16, 30, 115, 0.06);
   border-radius: 8px;
   .table-title {
-    font-family: Lato;
+    font-family: Lato, sans-serif;
     font-weight: bold;
     font-size: 20px;
     line-height: 26px;
@@ -132,14 +149,31 @@ th {
       opacity: 0.2;
       padding: 19px 0;
       width: 100%;
-      th:first-child{
-        
+      .first-heading{
+          padding-left: 24px;
+      }
+      th{
+          padding: 18px 0;
       }
     }
     .td-row{
+        border: 1px solid #e8e8e8;
+        border-left: none;
+        border-right: none;
+        transition: all 0.2s;
         td:first-child{
             padding-left: 24px;
         }
+        .edit, .delete{
+            border: none;
+            border-radius: 4px;
+        }
+        .edit:hover, .delete:hover{
+            background: #e0e0e05e;
+        }
+    }
+    .td-row:hover{
+        background: #e8e8e85b;
     }
   }
 }
