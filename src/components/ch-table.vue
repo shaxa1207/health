@@ -10,7 +10,7 @@
         <th>Doctor</th>
         <th>Conditions</th>
         <th>
-            <button class="add">+</button>
+          <b-button v-b-modal.modal-prevent-closing>Open Modal</b-button>
         </th>
       </tr>
       <tr
@@ -18,14 +18,17 @@
         v-for="(element, index) in this.tableInfo"
         :key="index"
       >
-        <td><img :src="element.img" alt="" />{{ element.name }}</td>
+        <td>
+          <img :src="element.img" alt="" />
+          {{ element.name }}
+        </td>
         <td>{{ element.email }}</td>
         <td>{{ element.date }}</td>
         <td>{{ element.visitTime }}</td>
         <td>{{ element.doctor }}</td>
         <td>{{ element.conditions }}</td>
         <td>
-          <button class="edit">
+          <button class="edit" @click="edit(element)">
             <svg
               width="16"
               height="16"
@@ -56,6 +59,84 @@
         </td>
       </tr>
     </table>
+    <!-- <b-form-group><b-form-input ></b-form-input></b-form-group> -->
+    <b-modal
+      size="lg"
+      centered
+      id="modal-prevent-closing"
+      ref="modal"
+      title="Add New Activity"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <div class="row">
+          <div class="col-md-6">
+            <b-form-group
+              label="Name"
+              label-for="name-input"
+              invalid-feedback="Name is required"
+              :state="nameState"
+            >
+              <b-form-input
+                id="name-input"
+                v-model="name"
+                :state="nameState"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-6">
+            <b-form-group
+              label="Email"
+              label-for="email-input"
+              invalid-feedback="Email is required"
+              :state="emailState"
+            >
+              <b-form-input
+                type="email"
+                id="email-input"
+                v-model="email"
+                :state="emailState"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-6">
+            <b-form-group
+              label="Date"
+              label-for="date-input"
+              invalid-feedback="Date is required"
+              :state="dateState"
+            >
+              <b-form-input
+                id="date-input"
+                v-model="date"
+                :state="dateState"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-md-6">
+            <b-form-group
+              label="Visit Time"
+              label-for="time-input"
+              invalid-feedback="Visit time is required"
+              :state="timeState"
+            >
+              <b-form-input
+                id="time-input"
+                v-model="time"
+                :state="timeState"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+        </div>
+    <!-- <pre>{{this.$v.form}}</pre> -->
+      </form>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -63,6 +144,16 @@ export default {
   name: "ch-table",
   data() {
     return {
+      name: "",
+      email: "",
+      time: "",
+      date: "",
+      nameState: null,
+      emailState: null,
+      dateState: null,
+      timeState: null,
+
+      submittedNames: [],
       tableInfo: [
         {
           id: 0,
@@ -118,9 +209,47 @@ export default {
     };
   },
   methods: {
+    checkFormValidity() {
+      const valid = this.$refs.form.checkValidity();
+      this.nameState = valid;
+      this.emailState = valid;
+      this.dateState = valid;
+      this.timeState = valid;
+
+      return valid;
+    },
+    resetModal() {
+      this.name = "";
+      this.email = "";
+      this.date = "";
+      this.time = "";
+      this.nameState = null;
+      this.emailState = null;
+      this.dateState = null;
+      this.timeState = null;
+      
+    },
+    handleOk(bvModalEvt) {
+      // Prevent modal from closing
+      bvModalEvt.preventDefault();
+      // Trigger submit handler
+      this.handleSubmit();
+    },
+    handleSubmit() {
+      // Exit when the form isn't valid
+      if (!this.checkFormValidity()) {
+        return;
+      }
+      // Push the name to submitted names
+      this.submittedNames.push(this.name);
+      // Hide the modal manually
+      this.$nextTick(() => {
+        this.$bvModal.hide("modal-prevent-closing");
+      });
+    },
     remove(element) {
       const id = element.id;
-      const index = this.tableInfo.findIndex(x => x.id === id);
+      const index = this.tableInfo.findIndex((x) => x.id === id);
       this.tableInfo.splice(index, 1);
     },
   },
@@ -166,6 +295,17 @@ th {
       background: #e8e8e869;
       padding: 19px 0;
       width: 100%;
+      .add {
+        border: 1px solid #30a6f5;
+        background: #558effa9;
+        padding: 2px 8px;
+        border-radius: 8px;
+        color: #fff;
+        transition: all 0.3s;
+      }
+      .add:active {
+        background: #558eff;
+      }
       .first-heading {
         padding-left: 24px;
       }
