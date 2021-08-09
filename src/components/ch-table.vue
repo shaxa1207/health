@@ -1,6 +1,9 @@
 <template>
   <div class="ch-table">
-    <h4 class="table-title">Appointment Activity</h4>
+    <div class="table-header d-flex justify-content-between align-items-center">
+      <h4 class="table-title">Appointment Activity</h4>
+      <button class="add-btn" @click="addDetail()">Add</button>
+    </div>
     <table class="table">
       <tr class="heading-row">
         <th class="first-heading">Name</th>
@@ -9,9 +12,7 @@
         <th>Visit Time</th>
         <th>Doctor</th>
         <th>Conditions</th>
-        <th>
-          <b-button v-b-modal.modal-prevent-closing>+</b-button>
-        </th>
+        <th></th>
       </tr>
       <tr
         class="td-row"
@@ -59,84 +60,41 @@
         </td>
       </tr>
     </table>
-    <!-- <b-form-group><b-form-input ></b-form-input></b-form-group> -->
-    <b-modal
-      size="lg"
-      centered
-      id="modal-prevent-closing"
-      ref="modal"
-      title="Add New Activity"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
-        <div class="row">
-          <div class="col-md-6">
-            <b-form-group
-              label="Name"
-              label-for="name-input"
-              invalid-feedback="Name is required"
-              :state="nameState"
-            >
-              <b-form-input
-                id="name-input"
-                v-model="name"
-                :state="nameState"
+
+    <div :class="isActive ? 'openModal' : ''" class="modal-wrapper">
+      <div class="table-modal">
+        <h4 class="modal_title">Add Activity</h4>
+        <form>
+          <div class="row">
+            <div class="col-md-6 mt-3">
+              <label for="name"> Name</label>
+              <input type="text" id="name" placeholder="Enter Name" required />
+            </div>
+            <div class="col-md-6 mt-3">
+              <label for="email"> Email</label>
+              <input
+                type="text"
+                placeholder="Enter Email"
+                id="email"
                 required
-              ></b-form-input>
-            </b-form-group>
+              />
+            </div>
+            <div class="col-md-6 mt-3">
+              <label for="date"> Date</label>
+              <input type="text" placeholder="Enter Date" id="date" required />
+            </div>
+            <div class="col-md-6 mt-3">
+              <label for="time"> Time</label>
+              <input type="text" placeholder="Enter Time" id="time" required />
+            </div>
+            <div class="modal-buttons d-flex justify-content-end">
+              <button class="cancel">Cancel</button>
+              <button class="add">Add</button>
+            </div>
           </div>
-          <div class="col-md-6">
-            <b-form-group
-              label="Email"
-              label-for="email-input"
-              invalid-feedback="Email is required"
-              :state="emailState"
-            >
-              <b-form-input
-                type="email"
-                id="email-input"
-                v-model="email"
-                :state="emailState"
-                required
-              ></b-form-input>
-            </b-form-group>
-          </div>
-          <div class="col-md-6">
-            <b-form-group
-              label="Date"
-              label-for="date-input"
-              invalid-feedback="Date is required"
-              :state="dateState"
-            >
-              <b-form-input
-                id="date-input"
-                v-model="date"
-                :state="dateState"
-                required
-              ></b-form-input>
-            </b-form-group>
-          </div>
-          <div class="col-md-6">
-            <b-form-group
-              label="Visit Time"
-              label-for="time-input"
-              invalid-feedback="Visit time is required"
-              :state="timeState"
-            >
-              <b-form-input
-                id="time-input"
-                v-model="time"
-                :state="timeState"
-                required
-              ></b-form-input>
-            </b-form-group>
-          </div>
-        </div>
-    <!-- <pre>{{this.$v.form}}</pre> -->
-      </form>
-    </b-modal>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -144,10 +102,15 @@ export default {
   name: "ch-table",
   data() {
     return {
-      name: "",
-      email: "",
-      time: "",
-      date: "",
+      isActive: false,
+      form: [
+        {
+          namee: "",
+          email: "",
+          time: "",
+          date: "",
+        },
+      ],
       nameState: null,
       emailState: null,
       dateState: null,
@@ -209,44 +172,10 @@ export default {
     };
   },
   methods: {
-    checkFormValidity() {
-      const valid = this.$refs.form.checkValidity();
-      this.nameState = valid;
-      this.emailState = valid;
-      this.dateState = valid;
-      this.timeState = valid;
+    addDetail() {
+      this.isActive = true;
+    },
 
-      return valid;
-    },
-    resetModal() {
-      this.name = "";
-      this.email = "";
-      this.date = "";
-      this.time = "";
-      this.nameState = null;
-      this.emailState = null;
-      this.dateState = null;
-      this.timeState = null;
-      
-    },
-    handleOk(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault();
-      // Trigger submit handler
-      this.handleSubmit();
-    },
-    handleSubmit() {
-      // Exit when the form isn't valid
-      if (!this.checkFormValidity()) {
-        return;
-      }
-      // Push the name to submitted names
-      this.submittedNames.push(this.name);
-      // Hide the modal manually
-      this.$nextTick(() => {
-        this.$bvModal.hide("modal-prevent-closing");
-      });
-    },
     remove(element) {
       const id = element.id;
       const index = this.tableInfo.findIndex((x) => x.id === id);
@@ -256,6 +185,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.openModal {
+  display: block !important;
+}
+
 td {
   font-family: Lato, sans-serif;
   font-size: 14px;
@@ -263,11 +196,13 @@ td {
   letter-spacing: 0.1px;
   color: #52575c;
   padding: 12px 0;
+
   img {
     padding: 0;
     margin-right: 12px;
   }
 }
+
 th {
   font-family: Lato, sans-serif;
   font-weight: bold;
@@ -276,10 +211,100 @@ th {
   letter-spacing: 0.1px;
   color: #25282b;
 }
+
 .ch-table {
   background: #ffffff;
   box-shadow: 0px 12px 26px rgba(16, 30, 115, 0.06);
   border-radius: 8px;
+
+  .modal-wrapper {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.562);
+    top: 0;
+    left: 0;
+
+    .table-modal {
+      padding: 16px 24px;
+      background: #ffffff;
+      box-shadow: 0px 0px 1px rgba(12, 26, 75, 0.24),
+        0px 3px 8px -1px rgba(50, 50, 71, 0.05);
+      border-radius: 6px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s;
+
+      input {
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid #e4e6ef;
+        box-sizing: border-box;
+        border-radius: 6px;
+        font-family: Inter;
+        font-size: 14px;
+        line-height: 14px;
+        color: #000;
+        outline: none;
+        padding: 10px 12px;
+      }
+
+      label {
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        line-height: 19px;
+        color: #3f4254;
+      }
+
+      .modal-buttons {
+        button {
+          border-radius: 6px;
+          padding: 9px 24px;
+          font-family: Inter, sans-serif;
+          font-size: 12px;
+          outline: none;
+          line-height: 19px;
+          margin-top: 32px;
+        }
+
+        .cancel {
+          background: #e4e6ef;
+          border: 1px solid #e4e6ef;
+          color: #3f4254;
+        }
+
+        .add {
+          background: #3699ff;
+          color: #ffffff;
+          border: 1px solid #3699ff;
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+
+  .table-header {
+    padding: 24px;
+
+    .add-btn {
+      background: #30a6f5;
+      border-radius: 4px;
+      color: #fff;
+      border: 1px solid #30a6f5;
+      outline: none;
+      font-size: 13px;
+      padding: 4px 12px;
+      transition: all 0.3s;
+    }
+
+    .add-btn:hover {
+      background: #0c5f96cb;
+    }
+  }
+
   .table-title {
     font-family: Lato, sans-serif;
     font-weight: bold;
@@ -287,14 +312,15 @@ th {
     line-height: 26px;
     letter-spacing: 0.2px;
     color: #25282b;
-    padding: 24px;
     margin: 0;
   }
+
   .table {
     .heading-row {
       background: #e8e8e869;
       padding: 19px 0;
       width: 100%;
+
       .add {
         border: 1px solid #30a6f5;
         background: #558effa9;
@@ -303,34 +329,42 @@ th {
         color: #fff;
         transition: all 0.3s;
       }
+
       .add:active {
         background: #558eff;
       }
+
       .first-heading {
         padding-left: 24px;
       }
+
       th {
         padding: 18px 0;
       }
     }
+
     .td-row {
       border: 1px solid #e8e8e8;
       border-left: none;
       border-right: none;
       transition: all 0.2s;
+
       td:first-child {
         padding-left: 24px;
       }
+
       .edit,
       .delete {
         border: none;
         border-radius: 4px;
       }
+
       .edit:hover,
       .delete:hover {
         background: #e0e0e05e;
       }
     }
+
     .td-row:hover {
       background: #e8e8e85b;
     }

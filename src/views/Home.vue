@@ -3,7 +3,7 @@
     <ch-aside />
     <div class="main-part">
       <search-bar :card="cardItem"/>
-      <health-chart />
+      <chard-wrapper />
       <ch-table />
     </div>
   </div>
@@ -13,7 +13,7 @@
 import ChAside from "../components/ch-aside.vue";
 import SearchBar from "../components/searchBar.vue";
 import ChTable from "../components/ch-table.vue";
-import HealthChart from '../components/healthChart.vue';
+import ChardWrapper from '../components/chardWrapper.vue';
 
 
 export default {
@@ -48,12 +48,14 @@ export default {
     ChAside,
     SearchBar,
     ChTable,
-    HealthChart
+    ChardWrapper,
+    
   }
 };
 
 </script>
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 .home {
   background: #f6f8fb;
