@@ -88,7 +88,7 @@
               <input type="text" placeholder="Enter Time" id="time" required />
             </div>
             <div class="modal-buttons d-flex justify-content-end">
-              <button class="cancel">Cancel</button>
+              <button class="cancel" @click="cancel()">Cancel</button>
               <button class="add">Add</button>
             </div>
           </div>
@@ -174,6 +174,10 @@ export default {
   methods: {
     addDetail() {
       this.isActive = true;
+    },
+
+    cancel(){
+      this.isActive = false;
     },
 
     remove(element) {
