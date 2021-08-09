@@ -3,6 +3,7 @@
     <ch-aside />
     <div class="main-part">
       <search-bar :card="cardItem"/>
+      <health-chart />
       <ch-table />
     </div>
   </div>
@@ -12,15 +13,11 @@
 import ChAside from "../components/ch-aside.vue";
 import SearchBar from "../components/searchBar.vue";
 import ChTable from "../components/ch-table.vue";
+import HealthChart from '../components/healthChart.vue';
 
 
 export default {
   name: "Home",
-  components: {
-    ChAside,
-    SearchBar,
-    ChTable,
-  },
   data(){
     return{
       cardItem: [
@@ -46,6 +43,12 @@ export default {
         },
       ]
     }
+  },
+  components: {
+    ChAside,
+    SearchBar,
+    ChTable,
+    HealthChart
   }
 };
 

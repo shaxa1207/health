@@ -10,7 +10,7 @@
         <th>Doctor</th>
         <th>Conditions</th>
         <th>
-          <b-button v-b-modal.modal-prevent-closing>Open Modal</b-button>
+          <b-button v-b-modal.modal-prevent-closing>+</b-button>
         </th>
       </tr>
       <tr
