@@ -2,7 +2,7 @@
   <div class="ch-table">
     <div class="table-header d-flex justify-content-between align-items-center">
       <h4 class="table-title">Appointment Activity</h4>
-      <button class="add-btn" @click="addDetail()">Add</button>
+      <button class="add-btn" id="add-btn" @click="addDetail()">Add</button>
     </div>
     <table class="table">
       <tr class="heading-row">
@@ -60,37 +60,77 @@
         </td>
       </tr>
     </table>
+    
 
     <div :class="isActive ? 'openModal' : ''" class="modal-wrapper">
       <div class="table-modal">
         <h4 class="modal_title">Add Activity</h4>
-        <form>
+        <form onsubmit="return false" :class="{
+          'is-invalid': $v.form.$error
+        }">
           <div class="row">
             <div class="col-md-6 mt-3">
               <label for="name"> Name</label>
-              <input type="text" id="name" placeholder="Enter Name" required />
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Enter Name"
+                  v-model="form.namee"
+                  required
+                  :class="{
+                    'invalid': $v.form.namee.$model
+                  }"
+                />
             </div>
             <div class="col-md-6 mt-3">
               <label for="email"> Email</label>
               <input
-                type="text"
+                type="email"
                 placeholder="Enter Email"
                 id="email"
+                v-model="form.email"
                 required
+                :class="{
+                    'invalid': $v.form.email.$model
+                  }"
               />
             </div>
             <div class="col-md-6 mt-3">
               <label for="date"> Date</label>
-              <input type="text" placeholder="Enter Date" id="date" required />
+              <input
+                type="date"
+                placeholder="Enter Date"
+                id="date"
+                v-model="form.date"
+                required
+                :class="{
+                    'invalid': $v.form.date.$model
+                  }"
+              />
             </div>
             <div class="col-md-6 mt-3">
               <label for="time"> Time</label>
-              <input type="text" placeholder="Enter Time" id="time" required />
+              <input
+                type="time"
+                placeholder="Enter Time"
+                id="time"
+                v-model="form.time"
+                required
+                :class="{
+                    'invalid': $v.form.time.$model
+                  }"
+              />
             </div>
             <div class="modal-buttons d-flex justify-content-end">
               <button class="cancel" @click="cancel()">Cancel</button>
-              <button class="add">Add</button>
+              <button class="add" @click="addInfo()">Add</button>
+              <pre>{{ this.form[0].$model }}</pre>
             </div>
+            <!-- <pre>{{ this.$v.form.$invalid }}</pre> -->
+            <!-- <pre>{{ $v.form }}</pre> -->
+            <!-- <pre>{{ $v.form.email }}</pre> -->
+            <!-- <pre>{{ $v.form.date }}</pre>
+            <pre>{{ $v.form.time }}</pre> -->
           </div>
         </form>
       </div>
@@ -98,6 +138,8 @@
   </div>
 </template>
 <script>
+
+import { required } from "vuelidate/lib/validators"
 export default {
   name: "ch-table",
   data() {
@@ -111,12 +153,7 @@ export default {
           date: "",
         },
       ],
-      nameState: null,
-      emailState: null,
-      dateState: null,
-      timeState: null,
-
-      submittedNames: [],
+      
       tableInfo: [
         {
           id: 0,
@@ -171,12 +208,29 @@ export default {
       ],
     };
   },
+  validations:{
+    form:{
+      namee: {
+        required,
+      },
+      email: {
+        required,
+      },
+      date: {
+        required,
+      },
+      time: {
+        required,
+      }
+    }
+  },
+
   methods: {
     addDetail() {
       this.isActive = true;
     },
 
-    cancel(){
+    cancel() {
       this.isActive = false;
     },
 
@@ -184,6 +238,27 @@ export default {
       const id = element.id;
       const index = this.tableInfo.findIndex((x) => x.id === id);
       this.tableInfo.splice(index, 1);
+    },
+
+    addInfo() {
+      // this.tableInfo.push(form);
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
+      } else {
+        this.tableInfo.push({
+          name: this.$v.form.namee.$model,
+          email: this.$v.form.email.$model,
+          date: this.$v.form.date.$model,
+          visitTime: this.$v.form.time.$model,
+        });
+        this.isActive = false;
+
+        this.$v.form.namee.$model = '',
+        this.$v.form.email.$model = '',
+        this.$v.form.date.$model = '',
+        this.$v.form.time.$model = ''
+      }
+        
     },
   },
 };
@@ -237,7 +312,7 @@ th {
         0px 3px 8px -1px rgba(50, 50, 71, 0.05);
       border-radius: 6px;
       position: fixed;
-      top: 50%;
+      top: 52%;
       left: 50%;
       transform: translate(-50%, -50%);
       transition: all 0.3s;
