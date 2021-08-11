@@ -21,7 +21,7 @@
       >
         <td>
           <img :src="element.img" alt="" />
-          {{ element.name }}
+          {{ element.namee }}
         </td>
         <td>{{ element.email }}</td>
         <td>{{ element.date }}</td>
@@ -60,27 +60,29 @@
         </td>
       </tr>
     </table>
-    
 
     <div :class="isActive ? 'openModal' : ''" class="modal-wrapper">
       <div class="table-modal">
         <h4 class="modal_title">Add Activity</h4>
-        <form onsubmit="return false" :class="{
-          'is-invalid': $v.form.$error
-        }">
+        <form
+          onsubmit="return false"
+          :class="{
+            'is-invalid': $v.form.$error,
+          }"
+        >
           <div class="row">
             <div class="col-md-6 mt-3">
               <label for="name"> Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Enter Name"
-                  v-model="form.namee"
-                  required
-                  :class="{
-                    'invalid': $v.form.namee.$model
-                  }"
-                />
+              <input
+                type="text"
+                id="name"
+                placeholder="Enter Name"
+                v-model="form.namee"
+                required
+                :class="{
+                  invalid: $v.form.namee.$model,
+                }"
+              />
             </div>
             <div class="col-md-6 mt-3">
               <label for="email"> Email</label>
@@ -91,34 +93,62 @@
                 v-model="form.email"
                 required
                 :class="{
-                    'invalid': $v.form.email.$model
-                  }"
+                  invalid: $v.form.email.$model,
+                }"
               />
             </div>
             <div class="col-md-6 mt-3">
               <label for="date"> Date</label>
               <input
-                type="date"
-                placeholder="Enter Date"
+                type="text"
+                v-mask="'##/##/####'"                
+                placeholder="dd/mm/yyyy"
                 id="date"
                 v-model="form.date"
                 required
                 :class="{
-                    'invalid': $v.form.date.$model
-                  }"
+                  invalid: $v.form.date.$model,
+                }"
               />
             </div>
             <div class="col-md-6 mt-3">
               <label for="time"> Time</label>
               <input
-                type="time"
-                placeholder="Enter Time"
+                type="text"
+                placeholder="00:00-00:00pm"
+                v-mask="'##:##-##:## AA'"
                 id="time"
                 v-model="form.time"
                 required
                 :class="{
-                    'invalid': $v.form.time.$model
-                  }"
+                  invalid: $v.form.time.$model,
+                }"
+              />
+            </div>
+            <div class="col-md-6 mt-3">
+              <label for="doctor"> Doctor</label>
+              <input
+                type="text"
+                placeholder="Enter Doctor name"
+                id="doctor"
+                v-model="form.doctor"
+                required
+                :class="{
+                  invalid: $v.form.doctor.$model,
+                }"
+              />
+            </div>
+            <div class="col-md-6 mt-3">
+              <label for="conditions"> Conditions</label>
+              <input
+                type="text"
+                placeholder="Enter Conditions"
+                id="conditions"
+                v-model="form.conditions"
+                required
+                :class="{
+                  invalid: $v.form.conditions.$model,
+                }"
               />
             </div>
             <div class="modal-buttons d-flex justify-content-end">
@@ -147,18 +177,21 @@ export default {
       isActive: false,
       form: [
         {
+          img: require("../assets/images/01.png"),
           namee: "",
           email: "",
           time: "",
           date: "",
+          doctor: "",
+          conditions: "",
         },
       ],
-      
+
       tableInfo: [
         {
           id: 0,
           img: require("../assets/images/01.png"),
-          name: "Leslie Alexander",
+          namee: "Leslie Alexander",
           email: "lesie.alexander@example.com",
           date: "10/10/2020",
           visitTime: "09:15-09:45am",
@@ -168,7 +201,7 @@ export default {
         {
           id: 1,
           img: require("../assets/images/02.png"),
-          name: "Ronald Richards",
+          namee: "Ronald Richards",
           email: "ronald.richards@example.com",
           date: "10/10/2020",
           visitTime: "12:00-12:45pm",
@@ -178,7 +211,7 @@ export default {
         {
           id: 2,
           img: require("../assets/images/03.png"),
-          name: "Jane Cooper",
+          namee: "Jane Cooper",
           email: "jane.cooper@example.com",
           date: "10/13/2020",
           visitTime: "01:15-01:45pm",
@@ -188,7 +221,7 @@ export default {
         {
           id: 3,
           img: require("../assets/images/04.png"),
-          name: "Robert Fox",
+          namee: "Robert Fox",
           email: "robert.fox@gmail.com",
           date: "10/14/2020",
           visitTime: "02:00-02:45pm",
@@ -198,7 +231,7 @@ export default {
         {
           id: 4,
           img: require("../assets/images/02.png"),
-          name: "Jenny Wilson",
+          namee: "Jenny Wilson",
           email: "jenny.wilson@example.com",
           date: "10/15/2020",
           visitTime: "12:00-12:45pm",
@@ -221,7 +254,13 @@ export default {
       },
       time: {
         required,
-      }
+      },
+      doctor: {
+        required,
+      },
+      conditions: {
+        required,
+      },
     }
   },
 
@@ -240,25 +279,44 @@ export default {
       this.tableInfo.splice(index, 1);
     },
 
+    edit(element) {
+      // console.log(element);
+      this.isActive = true;
+      // const id = element.id;
+      // const index = this.tableInfo.findIndex((x) => x.id === id);
+      this.form.namee = element.namee
+      this.form.email = element.email
+      this.form.date = element.date
+      this.form.time = element.time
+      this.form.doctor = element.doctor
+      this.form.conditions = element.conditions
+      console.log(this.form);
+    },
+
     addInfo() {
       // this.tableInfo.push(form);
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
       } else {
         this.tableInfo.push({
-          name: this.$v.form.namee.$model,
+          img: this.form[0].img,
+          namee: this.$v.form.namee.$model,
           email: this.$v.form.email.$model,
           date: this.$v.form.date.$model,
           visitTime: this.$v.form.time.$model,
+          doctor: this.$v.form.doctor.$model,
+          conditions: this.$v.form.conditions.$model,
         });
         this.isActive = false;
 
         this.$v.form.namee.$model = '',
         this.$v.form.email.$model = '',
         this.$v.form.date.$model = '',
-        this.$v.form.time.$model = ''
+        this.$v.form.time.$model = '',
+        this.$v.form.doctor.$model = '',
+        this.$v.form.conditions.$model = ''
       }
-        
+
     },
   },
 };
