@@ -29,7 +29,7 @@
         <td>{{ element.doctor }}</td>
         <td>{{ element.conditions }}</td>
         <td>
-          <button class="edit" @click="edit(element)">
+          <button class="edit" @click="edit(element, index)">
             <svg
               width="16"
               height="16"
@@ -101,7 +101,7 @@
               <label for="date"> Date</label>
               <input
                 type="text"
-                v-mask="'##/##/####'"                
+                v-mask="'##/##/####'"
                 placeholder="dd/mm/yyyy"
                 id="date"
                 v-model="form.date"
@@ -168,13 +168,16 @@
   </div>
 </template>
 <script>
-
-import { required } from "vuelidate/lib/validators"
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "ch-table",
   data() {
     return {
+      addButton: false,
+      a: null,
+
       isActive: false,
+      element: [],
       form: [
         {
           img: require("../assets/images/01.png"),
@@ -241,8 +244,8 @@ export default {
       ],
     };
   },
-  validations:{
-    form:{
+  validations: {
+    form: {
       namee: {
         required,
       },
@@ -261,12 +264,13 @@ export default {
       conditions: {
         required,
       },
-    }
+    },
   },
 
-  methods: {
+  methods: {    
     addDetail() {
       this.isActive = true;
+      this.addButton = true;
     },
 
     cancel() {
@@ -279,44 +283,65 @@ export default {
       this.tableInfo.splice(index, 1);
     },
 
-    edit(element) {
-      // console.log(element);
-      this.isActive = true;
-      // const id = element.id;
-      // const index = this.tableInfo.findIndex((x) => x.id === id);
-      this.form.namee = element.namee
-      this.form.email = element.email
-      this.form.date = element.date
-      this.form.time = element.time
-      this.form.doctor = element.doctor
-      this.form.conditions = element.conditions
-      console.log(this.form);
+    edit(element, index) {
+      this.isActive = true;      
+      this.form.namee = element.namee;
+      this.form.email = element.email;
+      this.form.date = element.date;
+      this.form.time = element.time;
+      this.form.doctor = element.doctor;
+      this.form.conditions = element.conditions;
+      this.a = index;
     },
 
     addInfo() {
-      // this.tableInfo.push(form);
-      if (this.$v.form.$invalid) {
-        this.$v.form.$touch();
-      } else {
-        this.tableInfo.push({
-          img: this.form[0].img,
-          namee: this.$v.form.namee.$model,
-          email: this.$v.form.email.$model,
-          date: this.$v.form.date.$model,
-          visitTime: this.$v.form.time.$model,
-          doctor: this.$v.form.doctor.$model,
-          conditions: this.$v.form.conditions.$model,
-        });
-        this.isActive = false;
+      if (this.addButton === true) {
+        if (this.$v.form.$invalid) {
+          this.$v.form.$touch();
+        } else {
+          this.tableInfo.push({
+            img: this.form[0].img,
+            namee: this.$v.form.namee.$model,
+            email: this.$v.form.email.$model,
+            date: this.$v.form.date.$model,
+            visitTime: this.$v.form.time.$model,
+            doctor: this.$v.form.doctor.$model,
+            conditions: this.$v.form.conditions.$model,
+          });
+          this.isActive = false;
+          this.addButton = false;
 
-        this.$v.form.namee.$model = '',
-        this.$v.form.email.$model = '',
-        this.$v.form.date.$model = '',
-        this.$v.form.time.$model = '',
-        this.$v.form.doctor.$model = '',
-        this.$v.form.conditions.$model = ''
+          (this.$v.form.namee.$model = ""),
+            (this.$v.form.email.$model = ""),
+            (this.$v.form.date.$model = ""),
+            (this.$v.form.time.$model = ""),
+            (this.$v.form.doctor.$model = ""),
+            (this.$v.form.conditions.$model = "");
+        }
+      } else {                
+        if (this.$v.form.$invalid) {
+          this.$v.form.$touch();
+        } else {
+            this.tableInfo.splice(this.a, 1, {
+            img: this.form[0].img,
+            namee: this.$v.form.namee.$model,
+            email: this.$v.form.email.$model,
+            date: this.$v.form.date.$model,
+            visitTime: this.$v.form.time.$model,
+            doctor: this.$v.form.doctor.$model,
+            conditions: this.$v.form.conditions.$model,
+          })          
+          this.isActive = false;
+          this.addButton = false;
+
+          (this.$v.form.namee.$model = ""),
+            (this.$v.form.email.$model = ""),
+            (this.$v.form.date.$model = ""),
+            (this.$v.form.time.$model = ""),
+            (this.$v.form.doctor.$model = ""),
+            (this.$v.form.conditions.$model = "");
+        }
       }
-
     },
   },
 };
