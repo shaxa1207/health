@@ -159,8 +159,8 @@
             <!-- <pre>{{ this.$v.form.$invalid }}</pre> -->
             <!-- <pre>{{ $v.form }}</pre> -->
             <!-- <pre>{{ $v.form.email }}</pre> -->
-            <!-- <pre>{{ $v.form.date }}</pre>
-            <pre>{{ $v.form.time }}</pre> -->
+            <!-- <pre>{{ $v.form.date }}</pre> -->
+            <!-- <pre>{{ this.tableInfo }}</pre> -->
           </div>
         </form>
       </div>
@@ -190,58 +190,7 @@ export default {
         },
       ],
 
-      tableInfo: [
-        {
-          id: 0,
-          img: require("../assets/images/01.png"),
-          namee: "Leslie Alexander",
-          email: "lesie.alexander@example.com",
-          date: "10/10/2020",
-          visitTime: "09:15-09:45am",
-          doctor: "Dr. Jacob Jones",
-          conditions: "Mumps Stage II",
-        },
-        {
-          id: 1,
-          img: require("../assets/images/02.png"),
-          namee: "Ronald Richards",
-          email: "ronald.richards@example.com",
-          date: "10/10/2020",
-          visitTime: "12:00-12:45pm",
-          doctor: "Dr. Theresa Webb",
-          conditions: "Depression",
-        },
-        {
-          id: 2,
-          img: require("../assets/images/03.png"),
-          namee: "Jane Cooper",
-          email: "jane.cooper@example.com",
-          date: "10/13/2020",
-          visitTime: "01:15-01:45pm",
-          doctor: "Dr. Jacob Jones",
-          conditions: "Arthritis",
-        },
-        {
-          id: 3,
-          img: require("../assets/images/04.png"),
-          namee: "Robert Fox",
-          email: "robert.fox@gmail.com",
-          date: "10/14/2020",
-          visitTime: "02:00-02:45pm",
-          doctor: "Dr. Arlene McCoy",
-          conditions: "Fracture",
-        },
-        {
-          id: 4,
-          img: require("../assets/images/02.png"),
-          namee: "Jenny Wilson",
-          email: "jenny.wilson@example.com",
-          date: "10/15/2020",
-          visitTime: "12:00-12:45pm",
-          doctor: "Dr. Esther Howard",
-          conditions: "Depression",
-        },
-      ],
+      tableInfo: JSON.parse(localStorage.getItem('myObj')),
     };
   },
   validations: {
@@ -267,11 +216,11 @@ export default {
     },
   },
 
-  methods: {    
+  methods: {
     addDetail() {
       this.isActive = true;
       this.addButton = true;
-    },
+    },    
 
     cancel() {
       this.isActive = false;
@@ -281,10 +230,13 @@ export default {
       const id = element.id;
       const index = this.tableInfo.findIndex((x) => x.id === id);
       this.tableInfo.splice(index, 1);
+      let myObj = JSON.stringify(this.tableInfo);
+          localStorage.setItem("myObj", myObj);
+          console.log(localStorage);
     },
 
     edit(element, index) {
-      this.isActive = true;      
+      this.isActive = true;
       this.form.namee = element.namee;
       this.form.email = element.email;
       this.form.date = element.date;
@@ -299,7 +251,7 @@ export default {
         if (this.$v.form.$invalid) {
           this.$v.form.$touch();
         } else {
-          this.tableInfo.push({
+          this.tableInfo.unshift({
             img: this.form[0].img,
             namee: this.$v.form.namee.$model,
             email: this.$v.form.email.$model,
@@ -308,21 +260,26 @@ export default {
             doctor: this.$v.form.doctor.$model,
             conditions: this.$v.form.conditions.$model,
           });
+
+          let myObj = JSON.stringify(this.tableInfo);
+          localStorage.setItem("myObj", myObj);
+          console.log(localStorage);
+
           this.isActive = false;
           this.addButton = false;
 
           (this.$v.form.namee.$model = ""),
-            (this.$v.form.email.$model = ""),
-            (this.$v.form.date.$model = ""),
-            (this.$v.form.time.$model = ""),
-            (this.$v.form.doctor.$model = ""),
-            (this.$v.form.conditions.$model = "");
+          (this.$v.form.email.$model = ""),
+          (this.$v.form.date.$model = ""),
+          (this.$v.form.time.$model = ""),
+          (this.$v.form.doctor.$model = ""),
+          (this.$v.form.conditions.$model = "");
         }
-      } else {                
+      } else {
         if (this.$v.form.$invalid) {
           this.$v.form.$touch();
         } else {
-            this.tableInfo.splice(this.a, 1, {
+          this.tableInfo.splice(this.a, 1, {
             img: this.form[0].img,
             namee: this.$v.form.namee.$model,
             email: this.$v.form.email.$model,
@@ -330,7 +287,12 @@ export default {
             visitTime: this.$v.form.time.$model,
             doctor: this.$v.form.doctor.$model,
             conditions: this.$v.form.conditions.$model,
-          })          
+          });
+
+          let myObj = JSON.stringify(this.tableInfo);
+          localStorage.setItem("myObj", myObj);
+          console.log(localStorage);
+
           this.isActive = false;
           this.addButton = false;
 
