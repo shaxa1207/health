@@ -57,6 +57,7 @@
               />
             </svg>
           </button>
+          <!-- <pre>{{element}}</pre> -->
         </td>
       </tr>
     </table>
@@ -157,7 +158,7 @@
               <pre>{{ this.form[0].$model }}</pre>
             </div>
             <!-- <pre>{{ this.$v.form.$invalid }}</pre> -->
-            <!-- <pre>{{ $v.form }}</pre> -->
+            <!-- <pre>{{ $v.form.email }}</pre> -->
             <!-- <pre>{{ $v.form.email }}</pre> -->
             <!-- <pre>{{ $v.form.date }}</pre> -->
             <!-- <pre>{{ this.tableInfo }}</pre> -->
@@ -178,8 +179,9 @@ export default {
 
       isActive: false,
       element: [],
+      id: -1,
       form: [
-        {
+        {          
           img: require("../assets/images/01.png"),
           namee: "",
           email: "",
@@ -189,6 +191,7 @@ export default {
           conditions: "",
         },
       ],
+      
 
       tableInfo: JSON.parse(localStorage.getItem('myObj')),
     };
@@ -229,10 +232,11 @@ export default {
     remove(element) {
       const id = element.id;
       const index = this.tableInfo.findIndex((x) => x.id === id);
-      this.tableInfo.splice(index, 1);
+      this.tableInfo.splice(index, 1);      
+
       let myObj = JSON.stringify(this.tableInfo);
-          localStorage.setItem("myObj", myObj);
-          console.log(localStorage);
+      localStorage.setItem("myObj", myObj);
+      console.log(localStorage);
     },
 
     edit(element, index) {
@@ -247,19 +251,24 @@ export default {
     },
 
     addInfo() {
+      
       if (this.addButton === true) {
         if (this.$v.form.$invalid) {
           this.$v.form.$touch();
         } else {
-          this.tableInfo.unshift({
+          this.id++;
+          this.tableInfo.unshift({                        
             img: this.form[0].img,
             namee: this.$v.form.namee.$model,
             email: this.$v.form.email.$model,
             date: this.$v.form.date.$model,
             visitTime: this.$v.form.time.$model,
             doctor: this.$v.form.doctor.$model,
+            id: this.id,
             conditions: this.$v.form.conditions.$model,
           });
+          console.log(this.tableInfo)
+          
 
           let myObj = JSON.stringify(this.tableInfo);
           localStorage.setItem("myObj", myObj);
@@ -286,6 +295,7 @@ export default {
             date: this.$v.form.date.$model,
             visitTime: this.$v.form.time.$model,
             doctor: this.$v.form.doctor.$model,
+            id: this.id,
             conditions: this.$v.form.conditions.$model,
           });
 

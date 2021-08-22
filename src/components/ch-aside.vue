@@ -10,7 +10,7 @@
 
       <ul class="menu-list">
         <li class="menu-list__item">
-          <router-link to="#" class="link d-flex align-items-center">
+          <router-link to="../about" class="link d-flex align-items-center">
             <svg
               width="16"
               height="16"

@@ -2,7 +2,7 @@
   <div class="home d-flex">
     <ch-aside />
     <div class="main-part">
-      <search-bar :card="cardItem"/>
+      <search-bar :card="cardItem" />
       <chard-wrapper />
       <ch-table />
     </div>
